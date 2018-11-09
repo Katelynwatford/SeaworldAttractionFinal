@@ -1,0 +1,293 @@
+<!DOCTYPE html>
+<html>
+	<head>
+	<title>Sea World</title>
+
+	<script type="text/javascript">
+
+				// FileName:Watford_Final.html
+				// Programmer: Katelyn Watford
+				// Purpose: Outpting the final sea world production counting 
+				// and outputing type of ticket total tickets for each type and
+				// total revenue for each type.
+
+
+		//Global Variables
+		var PRE_FORMAT = "<pre>";
+		var END_FORMAT = "</pre>";
+		var ADULT_FEE = 11.50;
+		var JUNIOR_FEE = 7.50;
+		var TODDLER_FEE = 0;
+		var ADULTS = "A";
+		var JUNIORS = "J";
+		var TODDLER = "C";
+
+	//Start main Function: Main driver for the program.
+	function main()
+	{
+		var ticketType;
+		var ticketName = " ";
+		var numTickets = 0;
+		var ticketPrice = 0;
+		var adultCount = 0;
+		var juniorCount = 0;
+		var toddlerCount = 0;
+		var numberCounter = 0;
+		var totalSales = 0;
+		var adultSales = 0;
+		var juniorSales = 0;
+		var toddlerSales = 0;
+		var currentOrder = 0;
+		var more = " ";
+		var delta = 0;
+
+		//Categories Table with prices.
+		prices();
+
+		//alert to look at table.
+		alert("Please look at the table and then enter only one category at a time");
+
+		//Transaction prompts do you want tickets, do you not want tickets.
+		more = prompt("Would you like to make a transaction? (yes or no)", "yes");
+		more = more.toLowerCase();
+
+		//clearscreen
+		document.body.innerHTML = " ";
+
+		//while loop if you want more tickets then run through the loop if 
+		// you do not want more tickets then type no and it will display final 
+		// report.
+		while(more == "yes")
+		{
+			//Categories Table with prices.
+			prices();
+
+			//counter for number of records.
+			numberCounter ++;
+
+			//calling getTicketType function.
+			ticketType = getTicketType(ADULTS, JUNIORS, TODDLER);
+
+			//Calling getQuanity function.
+			numTickets = getQuanity();
+
+			//calling findTicketName function.
+			ticketName = findTicketName(ticketType);
+
+			//if else to calculate if it is adult, junior, or toddler fee, 
+			// count the number of tickets, and calculate what the current 
+			// order will be.
+			if (ticketType == ADULTS)
+			{
+				ticketPrice = ADULT_FEE;
+				adultCount += numTickets;
+				currentOrder = ticketPrice * numTickets;
+			}
+			else  if (ticketType == JUNIORS)
+			{
+				ticketPrice = JUNIOR_FEE;
+				juniorCount +=numTickets;
+				currentOrder = ticketPrice * numTickets;
+			}
+			else  if (ticketType == TODDLER)
+			{
+				ticketPrice = TODDLER_FEE;
+				toddlerCount += numTickets;
+			}//End ticketType if else statement
+
+			//Have to also do currentOrder outside of if else of it will 
+			// through off the toddler price.
+			currentOrder = ticketPrice * numTickets;
+
+			//Calling getCharge Function
+			charge = getCharge(currentOrder);
+			//Counting total sales and how much it is as a gross total sale
+			totalSales  += charge;
+			//Delta is calculated to tell if charge did not give the right owe.
+			delta = charge - currentOrder;
+
+			//this is for the counting how many adults, juniors, toddlers
+			if(ticketType == ADULTS)
+			{
+				adultSales += charge;
+			}
+			else if(ticketType == JUNIORS)
+			{
+				juniorSales += charge;
+			}
+			else
+			{
+				toddlerSales += charge;
+			}//End tickType charge if else statement
+
+
+			// displayOneOrder()
+			displayOneOrder(numberCounter, ticketName, numTickets, charge, delta);
+
+			// Have to ask the prompt again or there will be no way to exit 
+			// the loop or calculate another transaction.
+			more = prompt("Would you like to make a transaction? (yes or no)", "yes");
+			more = more.toLowerCase();
+
+			// clearscreen again so that the prices table will show for every 
+			// transaction because the next person may not know the prices.
+			document.body.innerHTML=" ";
+
+		}//end loop
+
+		//displayFinalReport
+		displayFinalReport(ticketName, numberCounter, adultCount, juniorCount, toddlerCount, totalSales, adultSales, juniorSales, toddlerSales);
+
+		return;
+	}//End Main Function
+
+	function prices()
+	{
+		//Table for customer to choose from:
+		document.write(PRE_FORMAT);
+		document.writeln("Categories\tPrice");
+		document.writeln("Adult", "\t\t $", ADULT_FEE.toFixed(2));
+		document.writeln("Junior", "\t\t $", JUNIOR_FEE.toFixed(2));
+		document.writeln("Child", "\t\t $", TODDLER_FEE);
+		document.write(END_FORMAT);
+
+		return;
+	}
+
+
+	//Start getTicketType function: Just like the one in the last program.  Present a menu of the three ticket types.  Input the
+	//users choice and make sure it is a valid choice.  If it is invalid, then ask for another choice.
+	//Keep asking until the user enters a valid ticket type.  Return to main the users choice.
+	function getTicketType(ADULTS, JUNIORS, TODDLER)
+	{
+		var ticketType;
+
+		ticketType = prompt("Enter A, J or C", "A");
+		ticketType = ticketType.toUpperCase();
+
+		while(ticketType != ADULTS && ticketType != JUNIORS && ticketType != TODDLER)
+		{
+		ticketType = prompt("Please enter A, J or C", "A");
+		ticketType = ticketType.toUpperCase();
+		}
+
+		return ticketType;
+
+	}//End getTicketType Function
+
+	//Start findTicketName Function: Accepts the ticket type code (A, J, or C) and returns the name associated with that letter so you can display it.
+	function findTicketName(ticketType)
+	{
+		var fticketName = " ";
+		var grownUp = "Adult";
+		var teenager = "Junior";
+		var baby = "Child";
+
+			if (ticketType == ADULTS)
+			{
+				fticketName = grownUp;
+			}
+			else  if (ticketType == JUNIORS)
+			{
+				fticketName = teenager;
+			}
+			else  if (ticketType == TODDLER)
+			{
+				fticketName = baby;
+			}
+
+		return fticketName;
+	}//End findTicketName Function
+
+
+	//Start getQuanity Function: Input and return the quantity of tickets sold.
+	function getQuanity()
+	{
+		//var fnumTickets = 0;
+		var numTickets = 0;
+
+			numTickets = prompt("How many tickets would you like?", " ");
+			numTickets = parseInt(numTickets);
+
+		return numTickets;
+	}//End getQuanity Function
+
+	//Start getCharge Function: Input and return the charge for this set of tickets.
+	function getCharge(currentOrder)
+	{
+		var fcharge = 0;
+
+			fcharge = prompt("How much was the charge for the transaction?", currentOrder.toFixed(2));
+			fcharge = Number(fcharge);
+
+		return fcharge;
+	}//End getCharge Function
+
+	//Start displayOneOrder Function: Accepts the five values to be displayed for one ticket and displays their summary line (including the headers).
+	function displayOneOrder(numberCounter, ticketName, numTickets, charge, delta)
+	{
+		var baby = "Child";
+		document.write(PRE_FORMAT);
+		document.writeln("#\tType \tQuanity \tActual Charge \t Delta");
+
+		//This if else will only print the number of tickets, ticket name and number of tickets for toddler if is not a toddler than it will print the record number,
+		//the ticket name, the number of tickets, the charge, and the delta if need be.
+			if(ticketName == baby)
+			{
+				document.writeln(numberCounter + "\t " + ticketName + "\t" + numTickets);
+			}
+			else
+			{
+				document.writeln(numberCounter + "\t" + ticketName + "\t  " + numTickets + "\t\t  $" + charge.toFixed(2) +"\t $" + delta.toFixed(2));
+			}
+
+		document.write(END_FORMAT);
+
+		return;
+	}//End displayOneOrder Function
+
+	//Start displayFinalReport Function: Format and display the final totals.
+	function displayFinalReport(ticketName, numberCounter, adultCount, juniorCount, toddlerCount, totalSales, adultSales, juniorSales, toddlerSales)
+	{
+		var today = new Date();
+		var day = today.getDate();
+		var month = (today.getMonth() + 1);
+		var year = today.getFullYear();
+
+		//begin format of table
+		document.write(PRE_FORMAT);
+		//Heading for the final report
+		document.write("<h3>Summerville Sea World</h3>");
+		//Summary report date
+		document.write("<br>SUMMARY REPORT:" + " " + month + "/" + day + "/" + year + "</br>");
+
+		//document.write("<br>");
+		//number of records recorded
+		document.writeln("<br>Number of records: " + numberCounter + "</br>");
+		//Sales Total Header
+		document.writeln("SALES TOTALS");
+		document.writeln("------------" + "</br>");
+		//Printed Report so it looks just like the final example
+		document.writeln("<b>TICKET TYPE</b>" + "\t\t<b>TOTAL TICKETS</b>" + "\t\t<b>TOTAL REVENUE</b>");
+		document.writeln("------------" + "\t\t------------" + "\t\t------------");
+		document.writeln("  Adults:\t\t   " + adultCount + "\t\t\t $" + adultSales.toFixed(2));
+		document.writeln("  Juniors:\t\t   " + juniorCount + "\t\t\t $" + juniorSales.toFixed(2));
+		document.writeln("  Child:\t\t   " + toddlerCount + "\t\t\t $" + toddlerSales.toFixed(2));
+
+		//Total revenue for the whole days operations
+		document.write("<br><b>Total Revenue For Today: $" + totalSales.toFixed(2) + "</b>");
+		document.write(END_FORMAT);
+
+		return;
+
+	}//End displayFinalReport Function
+
+	</script>
+	</head>
+	<body>
+		<script type="text/javascript">
+			main();
+		</script>
+	</body>
+</html>
+
